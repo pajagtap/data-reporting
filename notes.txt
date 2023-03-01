@@ -1,0 +1,78 @@
+# Start the docker containers using docker-compose using cmd
+$ docker-compose up -d
+
+# check containers list
+$ docker ps -a
+
+# Verify if ./alumni_reporting, ./hive-server and ./hdfs folder are created
+
+# connect to bash shell of any container
+$ docker-compose exec <container_name/ID> bash
+    # connect to hive-server bash
+    $ docker-compose exec hive-server bash
+
+    # connect to hive CLI
+    root@c12c46a40a7c:/opt# /opt/hive/bin/beeline -u jdbc:hive2://localhost:10000
+
+    # Create database, tables and add records using queries from ./hive-query/alumni.sql
+    Check at each step, if database is created, table is created, records are inserted using queries.
+
+    # Ctrl+C to come out of the Hive Connection Prompt
+
+# Check if you are able to see parquet file
+When inserted records, data is stored in hdfs as parquet files
+Run below command on hive-server shell to verify parquet files are available
+```hdfs dfs -ls /user/hive/warehouse/abhighdb.db/alumni```
+
+# If required, explore around HDFS commands
+
+# To work with spark-df we need to export those parquet files to "./alumni_reporting/parquet_data_export/"
+1. Create folder parquet_data_export
+```mkdir -p /home/parquet_data_export```
+2. Get the file out of hdfs
+```hdfs dfs -copyToLocal /user/hive/warehouse/abhighdb.db/alumni /home/parquet_data_export/```
+3. You should be able to see the folder inside "./hive-server" named "/parquet_data_export/alumni"
+4. Copy the "parquet_data_export" folder to "./alumni_reporting" folder manully or using cmd (as you prefer)
+
+# Connect to Spark-Master shell using
+$ docker-compose exec spark-master bash
+
+# Verify the folders and files available at /home directory.
+
+# Open the Project Folder from local machine using VSCode
+
+# You should be able to handle the coding/scripting alongside docker container
+
+# Create Project structure 
+    *** If the repo is cloned then you don't need to do below steps
+    1. You can make use of Poetry and create folder under './alumni_reporting' named "data_reporting" (same should be accessible on spark-master:/home location)
+    2. Or Else you manually create the same (as per preferences)
+
+# For execution will be using spark-master bash shell prompt (referred as [Bash]) and for coding/scripting will be using opened VSCode (referred as [VSCode])
+
+[BASH]
+# Change directory to /home/alumni_reporting
+# Install the libraries required for execution using requirements.txt
+    bash-shell#: pip install -r requirements.txt
+
+[VSCODE]
+# Have a look at the code for src/data_reporting.py file and tests/test_data_reporting.py
+
+[BASH]
+# Run the pwd and you should see the output as
+    bash-shell#: pwd
+    /home/data_reporting
+
+# Run pytest command to check the unittest success/failure report
+    bash-shell#: pytest
+    (You might see DeprecationWarning, can ignore that)
+
+# Check if csv-file is available at /home/output_data folder
+
+# Use coverage python library to check unittest coverage.
+    bash-shell#: coverage run -m pytest
+    bash-shell#: coverage report -m
+    # Alternatively you can generate html coverage report using
+    bash-shell#: coverage html
+
+# Try to achieve the Coverage-Report upto 100%, All The Best !!

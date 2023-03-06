@@ -51,7 +51,7 @@ $ docker-compose exec spark-master bash
 # For execution will be using spark-master bash shell prompt (referred as [Bash]) and for coding/scripting will be using opened VSCode (referred as [VSCode])
 
 [BASH]
-# Change directory to /home/alumni_reporting
+# Change directory to /home/data_reporting
 # Install the libraries required for execution using requirements.txt
     bash-shell#: pip install -r requirements.txt
 
